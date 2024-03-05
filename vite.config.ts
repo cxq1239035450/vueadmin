@@ -1,20 +1,23 @@
-
-import { defineConfig  } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
-export default ({  }) => {
+export default ({ mode }) => {
+  console.log(mode)
+
   const config = {
-    base: './',
+    base: '/',
     plugins: [
-      vue(),vueJsx(),UnoCSS()
+      vue(),
+      vueJsx(),
+      UnoCSS(),
       // eslintPlugin({
       //   include: ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue']
       // })
     ],
     resolve: {
       alias: {
-        '@': '/src'
+        '@': '/src',
       },
       extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },

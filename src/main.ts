@@ -4,7 +4,8 @@ import App from './App.vue'
 import './sass/theme.scss'
 import './icon/iconfont.css'
 import 'virtual:uno.css'
+import './permission'
+import router from './router'
 window.document.documentElement.setAttribute('data-theme', 'light')
-import { MyClass } from '@/permission'
-const a = new MyClass()
-createApp(App).mount('#app')
+
+createApp(App).use(router).mount('#app')

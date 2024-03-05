@@ -1,9 +1,10 @@
 <template>
-  <div class="app">1111111111111111</div>
+  <div class="app">
+    <router-view />
+  </div>
 </template>
 
 <script setup lang="ts">
-
 </script>
 
 <style lang="scss">
