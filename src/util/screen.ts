@@ -1,4 +1,4 @@
-import type { Canceler } from 'axios'
+import type { Canceler, InternalAxiosRequestConfig } from 'axios'
 //保留第一个请求 后面相同的请求就会被取消掉
 const pendingPromise = new Map<string, Canceler>()
 
@@ -20,4 +20,16 @@ export const clearPending = () => {
     getPending(key)!()
   }
   pendingPromise.clear()
+}
+export const getPendingKey = (config: InternalAxiosRequestConfig): string => {
+  const { url, method, data, params } = config
+  return url + method! + toString(data) + toString(params)
+}
+// 未完善 key可能重复
+const toString = (data: any) => {
+  try {
+    return JSON.stringify(data)
+  } catch {
+    return ''
+  }
 }

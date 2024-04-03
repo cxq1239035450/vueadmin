@@ -3,8 +3,8 @@ import axios, {
   AxiosResponse,
   Canceler,
 } from 'axios'
-import { addPending, removePending } from './screen'
-let key = 0
+import { addPending, removePending, getPendingKey } from './screen'
+
 // 创建axios实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL, // api的base_url
@@ -20,10 +20,10 @@ service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.params = {
       ...config.params,
-      key: '40871c14a12b4079b9b505de9a211af4',
     }
+
     config.cancelToken = new CancelToken(function executor(source: Canceler) {
-      addPending(String(1), source)
+      addPending(getPendingKey(config), source)
     })
     return config
   },
@@ -34,15 +34,12 @@ service.interceptors.request.use(
 // respone拦截器
 service.interceptors.response.use(
   (response): AxiosResponse => {
-    removePending(String(1))
-    return response
+    removePending(getPendingKey(response.config))
+    return response.data
   },
   error => {
     if (axios.isCancel(error)) {
-      return Promise.reject({
-        code: 0,
-        message: '重复请求已取消',
-      })
+      return Promise.reject(new Error('重复请求已取消'))
     }
     return Promise.reject(error)
   }
