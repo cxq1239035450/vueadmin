@@ -1,1 +1,23 @@
+@use './normalize.css';
+@use './theme.scss';
+@use './variables.scss' as variables;
 
+#app {
+  width: 100vw;
+  height: 100vh;
+}
+.card {
+  position: relative;
+  box-shadow: variables.$box-shadow;
+  padding: 24px 32px 32px;
+  border-radius: 16px;
+  background-color: #fff;
+  text-align: center;
+}
+.centerPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}

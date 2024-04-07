@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { getUserInfo } from '@/api/user'
 import { anyObject } from '@/type/userType'
+import router from '@/router'
 export const useUserStore = defineStore('user', {
   state: () => ({
     info: {},
@@ -17,6 +18,10 @@ export const useUserStore = defineStore('user', {
       } catch {
         return Promise.reject(new Error('获取用户信息失败'))
       }
+    },
+    setUserInfoStore() {
+      sessionStorage.setItem('token', '123456')
+      router.push('/')
     },
   },
 })

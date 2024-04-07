@@ -1,11 +1,12 @@
 <template>
   <div class="app">
-    <router-view />
+    <keep-alive :include="[]">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss">
 .app {

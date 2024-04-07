@@ -1,12 +1,13 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
-import './sass/theme.scss'
+import './sass/index.scss'
 import './icon/iconfont.css'
 import 'virtual:uno.css'
-import './permission'
 import router from './router'
+import './permission'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import { createPinia } from 'pinia'
 window.document.documentElement.setAttribute('data-theme', 'light')
 
-createApp(App).use(router).use(createPinia()).mount('#app')
+createApp(App).use(ElementPlus).use(router).use(createPinia()).mount('#app')

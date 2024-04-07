@@ -17,14 +17,16 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "allowSyntheticDefaultImports": true
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["element-plus/global"]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/util/music.ts"
+    "src/components/errorPage/index.tsx"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
