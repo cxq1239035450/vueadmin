@@ -10,7 +10,7 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL, // api的base_url
   timeout: 60000, // 请求超时时间
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
   },
 })
 const CancelToken = axios.CancelToken

@@ -19,14 +19,14 @@
     },
     "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["element-plus/global"]
+    "types": ["element-plus/global"],
+    "experimentalDecorators": true
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/components/errorPage/index.tsx"
+    "src/**/*.vue"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

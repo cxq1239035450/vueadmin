@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -6,11 +6,16 @@ import UnoCSS from 'unocss/vite'
 // 可视化包大小
 import { visualizer } from 'rollup-plugin-visualizer'
 // import Inspect from 'vite-plugin-inspect'
+// 代码压缩
+// import viteCompression from 'vite-plugin-compression'
 //自动导入插件
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 export default ({ mode }) => {
+  const root = process.cwd()
+
+  const { VITE_DROP_CONSOLE } = loadEnv(mode, root)
   console.log(mode)
 
   const getPath = (relativePath: string): string => {
@@ -66,6 +71,34 @@ export default ({ mode }) => {
     define: {
       // 启用生产环境构建下激活不匹配的详细警告
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true',
+    },
+    build: {
+      // target: 'modules',
+      target: 'esnext',
+      outDir: 'dist',
+      assetsDir: './src/assets/',
+      // TODO:可能需要去掉 minify否则图片路径无法加载成功
+      // minify: 'terser', // 混淆器
+      rollupOptions: {
+        output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+          manualChunks: {
+            lodashES: ['lodash-es'],
+            ElementPlus: ['element-plus'],
+          },
+        },
+      },
+
+      terserOptions: {
+        compress: {
+          // 根据官网: 防止chrome出现性能问题
+          keep_infinity: true,
+          drop_console: VITE_DROP_CONSOLE === 'true',
+        },
+      },
+      sourcemap: false,
     },
     // server: {
     //   https: true   // 需要开启https服务
