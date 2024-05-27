@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite serve --mode develpoment",
+    "dev": "vite serve --mode development",
     "prod": "vite serve --mode production",
     "build": "vite build --mode production",
     "preview": "vite preview"

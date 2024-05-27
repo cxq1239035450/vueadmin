@@ -10,6 +10,8 @@ export const addPending = (id: string, cancel: Canceler) => {
   }
 }
 export const removePending = (id: string) => {
+  console.log(pendingPromise, id, '================')
+
   pendingPromise.delete(id)
 }
 export const getPending = (id: string) => {
@@ -27,6 +29,9 @@ export const getPendingKey = (config: InternalAxiosRequestConfig): string => {
 }
 // 未完善 key可能重复
 const toString = (data: any) => {
+  if (typeof data === 'string') {
+    return data
+  }
   try {
     return JSON.stringify(data)
   } catch {

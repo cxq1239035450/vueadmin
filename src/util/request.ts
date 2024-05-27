@@ -4,6 +4,7 @@ import axios, {
   Canceler,
 } from 'axios'
 import { addPending, removePending, getPendingKey } from './screen'
+import { anyObject } from '@/type/userType'
 
 // 创建axios实例
 const service = axios.create({
@@ -21,7 +22,7 @@ service.interceptors.request.use(
     config.params = {
       ...config.params,
     }
-
+    config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
     config.cancelToken = new CancelToken(function executor(source: Canceler) {
       addPending(getPendingKey(config), source)
     })

@@ -9,6 +9,7 @@
         <el-form-item>
           <el-input
             v-model="formData.password"
+            type="password"
             placeholder="输入密码"
           ></el-input>
         </el-form-item>
@@ -24,19 +25,17 @@
 import { anyObject } from '@/type/userType'
 import { useUserStore } from '@/store/user'
 const userStore = useUserStore()
-const demo: anyObject = {
-  user: 'pass',
-}
+const router = useRouter()
 const formData = reactive({
   username: '',
   password: '',
 })
-const loginBtn = () => {
-  if (demo[formData.username]) {
-    ElMessage.success('登陆成功')
-    userStore.setUserInfoStore()
+const loginBtn = async () => {
+  const res = await userStore.userLogin(formData)
+  if (res) {
+    router.push('/')
   } else {
-    ElMessage.error('密码错误')
+    ElMessage.error('账号或密码错误')
   }
 }
 </script>

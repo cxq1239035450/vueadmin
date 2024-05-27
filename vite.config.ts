@@ -59,6 +59,11 @@ export default ({ mode }) => {
         ],
       }),
       Components({
+        include: [
+          /\.[tj]sx?$/,
+          /\.vue$/,
+          /\.vue\?vue/,
+        ],
         resolvers: [
           ElementPlusResolver(),
           IconsResolver({
