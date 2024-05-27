@@ -9,6 +9,8 @@ import { visualizer } from 'rollup-plugin-visualizer'
 // 代码压缩
 // import viteCompression from 'vite-plugin-compression'
 //自动导入插件
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
@@ -49,11 +51,25 @@ export default ({ mode }) => {
           },
         ],
         dts: getPath('src/auto-import.d.ts'),
-        resolvers: [ElementPlusResolver()],
+        resolvers: [
+          ElementPlusResolver(),
+          IconsResolver({
+            prefix: 'Icon',
+          }),
+        ],
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
+        resolvers: [
+          ElementPlusResolver(),
+          IconsResolver({
+            prefix: false,
+            enabledCollections: ['ep'],
+          }),
+        ],
         dts: getPath('src/components.d.ts'),
+      }),
+      Icons({
+        autoInstall: true,
       }),
       visualizer({
         open: true,
