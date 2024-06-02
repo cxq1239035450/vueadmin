@@ -1,16 +1,10 @@
-import request from '@/util/request'
+import request from '@/utils/request'
 
-export function getUserList(params) {
+export function getUserList(params: any) {
   return request({
     url: '/user/list',
     method: 'get',
     params,
-  })
-}
-export function getUserInfo(data: any) {
-  return request({
-    url: '/auth/sign',
-    method: 'post',
   })
 }
 

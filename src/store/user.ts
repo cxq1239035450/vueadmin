@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', {
     },
     async userLogin(data: anyObject) {
       const res = await login(data)
-      sessionStorage.setItem('token', res.data.token)
+      sessionStorage.setItem('token', res.data.access_token)
       return true
     },
     setUserInfoStore() {

@@ -1,9 +1,9 @@
 <template>
   <div class="layoutPage">
     <Menu></Menu>
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col overflow-hidden">
       <Header></Header>
-      <div class="flex-1 bg-#f5f5f5 p-15px">
+      <div class="flex-1 bg-#f5f5f5 p-15px h-100%">
         <router-view></router-view>
       </div>
     </div>
@@ -18,5 +18,6 @@ import Header from './components/header.vue'
 .layoutPage {
   display: flex;
   height: 100%;
+  overflow: hidden;
 }
 </style>

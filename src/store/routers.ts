@@ -20,7 +20,7 @@ export const useRoutersStore = defineStore('routers', {
       await data.forEach(res => {
         router.addRoute('layout', res)
       })
-      console.log(router)
+      console.log(router.getRoutes())
     },
     // 获取路由
     async getRouters() {

@@ -9,12 +9,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Login/index.vue'),
   },
   {
-    path: '/',
+    path: '',
     name: 'layout',
     component: Layout,
     children: [
       {
-        path: '/',
+        path: '/home',
         component: () => import('@/views/Home/index.vue'),
       },
     ],

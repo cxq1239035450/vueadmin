@@ -22,7 +22,11 @@ service.interceptors.request.use(
     config.params = {
       ...config.params,
     }
-    config.headers['Authorization'] = `Bearer ${localStorage.getItem('token')}`
+    if (sessionStorage.getItem('token')) {
+      config.headers['Authorization'] = `Bearer ${sessionStorage.getItem(
+        'token'
+      )}`
+    }
     config.cancelToken = new CancelToken(function executor(source: Canceler) {
       addPending(getPendingKey(config), source)
     })
