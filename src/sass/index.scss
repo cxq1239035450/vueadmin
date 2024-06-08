@@ -21,3 +21,10 @@
   height: 100%;
   width: 100%;
 }
+.el-form {
+  .el-form-item:nth-last-child(n + 2) {
+    .el-form-item__content {
+      width: 160px;
+    }
+  }
+}

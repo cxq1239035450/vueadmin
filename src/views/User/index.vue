@@ -39,7 +39,7 @@ const data = reactive({
 })
 const getList = () => {
   getUserList({}).then(res => {
-    data.tableData = res as any
+    data.tableData = res.data
   })
 }
 const { queryParams, tableData } = toRefs(data)

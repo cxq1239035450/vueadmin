@@ -4,7 +4,6 @@ import axios, {
   Canceler,
 } from 'axios'
 import { addPending, removePending, getPendingKey } from './screen'
-import { anyObject } from '@/type/userType'
 
 // 创建axios实例
 const service = axios.create({
@@ -15,7 +14,6 @@ const service = axios.create({
   },
 })
 const CancelToken = axios.CancelToken
-const source = CancelToken.source()
 // request拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -46,6 +44,7 @@ service.interceptors.response.use(
     if (axios.isCancel(error)) {
       return Promise.reject(new Error('重复请求已取消'))
     }
+    removePending(getPendingKey(error.config))
     return Promise.reject(error)
   }
 )

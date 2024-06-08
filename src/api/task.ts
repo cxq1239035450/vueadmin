@@ -22,3 +22,11 @@ export function stopTask(data: any) {
     data,
   })
 }
+
+export function startTask(data: any) {
+  return request({
+    url: '/tasks/start',
+    method: 'post',
+    data,
+  })
+}

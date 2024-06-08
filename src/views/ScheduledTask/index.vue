@@ -10,7 +10,6 @@
       </el-form-item>
       <el-form-item label="任务状态" prop="status">
         <el-select
-          style="width: 100%"
           v-model="queryParams.jobName"
           placeholder="请输入任务名称"
           clearable
@@ -44,14 +43,24 @@
         :formatter="statusFormat"
       ></el-table-column>
       <el-table-column
+        prop="preExecutionTime"
+        label="上次执行时间"
+        width="180"
+        align="center"
+      ></el-table-column>
+      <el-table-column
         prop="executionResult"
         label="执行结果"
-        width="100"
         align="center"
       ></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button size="small">启动</el-button>
+          <el-button size="small" @click="changeStatus(scope.row)">{{
+            scope.row.status ? '暂停' : '启动'
+          }}</el-button>
+          <el-button size="small" @click="executeBtn(scope.row)"
+            >立即执行</el-button
+          >
           <el-button size="small" @click="editBtn(scope.row)">修改</el-button>
         </template>
       </el-table-column>
@@ -65,7 +74,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getTasksList } from '@/api/task'
+import { getTasksList, stopTask, startTask } from '@/api/task'
 import { getTime } from '@/utils/time'
 import Add from './add.vue'
 const data = reactive({
@@ -98,6 +107,15 @@ const addBtn = () => {
 }
 const editBtn = (item: any) => {
   addRef.value?.show(item)
+}
+const executeBtn = (item: any) => {
+  startTask({ id: item.id }).then(res => {
+    getList()
+    ElMessage.success('执行成功')
+  })
+}
+const changeStatus = (item: any) => {
+  const apis = {}
 }
 onMounted(() => {
   getList()
