@@ -16,11 +16,16 @@ export const useRoutersStore = defineStore('routers', {
       return this.menuList
     },
     // 设置路由
-    async setRouters(data: Array<RouteRecordRaw>) {
+    async setRouters(data: Array<RouteRecordRaw>, parent?: RouteRecordRaw) {
       await data.forEach(res => {
-        router.addRoute('layout', res)
+        console.log(res, parent, parent?.name, '================')
+
+        router.addRoute(parent?.name || 'layout', res)
+        if (res.children) {
+          this.setRouters(res.children as unknown as Array<RouteRecordRaw>, res)
+        }
       })
-      console.log(router.getRoutes())
+      // console.log(router.getRoutes())
     },
     // 获取路由
     async getRouters() {

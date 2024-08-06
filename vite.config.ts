@@ -59,11 +59,7 @@ export default ({ mode }) => {
         ],
       }),
       Components({
-        include: [
-          /\.[tj]sx?$/,
-          /\.vue$/,
-          /\.vue\?vue/,
-        ],
+        include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
         resolvers: [
           ElementPlusResolver(),
           IconsResolver({
@@ -99,14 +95,14 @@ export default ({ mode }) => {
       outDir: 'dist',
       assetsDir: './src/assets/',
       // TODO:可能需要去掉 minify否则图片路径无法加载成功
-      // minify: 'terser', // 混淆器
+      minify: 'terser' as 'terser', // 混淆器
       rollupOptions: {
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
           manualChunks: {
-            lodashES: ['lodash-es'],
+            // lodashES: ['lodash-es'],
             ElementPlus: ['element-plus'],
           },
         },
@@ -121,9 +117,12 @@ export default ({ mode }) => {
       },
       sourcemap: false,
     },
-    // server: {
-    //   https: true   // 需要开启https服务
-    //  },
+    server: {
+      // https: true   // 需要开启https服务
+      warmup: {
+        clientFiles: ['./src/components/layout/**/*.vue'],
+      },
+    },
   }
   return defineConfig(config)
 }
