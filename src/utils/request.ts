@@ -4,7 +4,7 @@ import axios, {
   Canceler,
 } from 'axios'
 import { addPending, removePending, getPendingKey } from './screen'
-
+import { ElMessage  } from "element-plus";
 // 创建axios实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL, // api的base_url
@@ -45,6 +45,9 @@ service.interceptors.response.use(
       return Promise.reject(new Error('重复请求已取消'))
     }
     removePending(getPendingKey(error.config))
+    console.log(error,'++++++++++++++++');
+    const { response } = error
+    ElMessage.error(response.data.msg)
     return Promise.reject(error)
   }
 )

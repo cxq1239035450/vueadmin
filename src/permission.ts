@@ -12,7 +12,7 @@ router.beforeEach(async (to, from, next) => {
     if (token) {
       const userStore = useUserStore()
       if (!userStore.info) {
-        await userStore.getUserInfo({token})
+        await userStore.getUserInfo()
         return next({ ...to })
       }
       next()

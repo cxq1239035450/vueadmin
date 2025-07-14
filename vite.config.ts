@@ -115,9 +115,10 @@ export default ({ mode }) => {
           drop_console: VITE_DROP_CONSOLE === 'true',
         },
       },
-      sourcemap: false,
+      sourcemap: true,
     },
     server: {
+      host:'0.0.0.0',
       // https: true   // 需要开启https服务
       warmup: {
         clientFiles: ['./src/components/layout/**/*.vue'],

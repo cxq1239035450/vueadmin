@@ -8,10 +8,10 @@ export const useUserStore = defineStore('user', {
     info: null as Object | null,
   }),
   actions: {
-    async getUserInfo(data: anyObject) {
+    async getUserInfo() {
       // 异步操作
       try {
-        const resData = await getUserInfo(data)
+        const resData = await getUserInfo()
         // this.$patch(state => {
         //   state.info = resData
         // })

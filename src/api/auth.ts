@@ -7,9 +7,9 @@ export function login(data: any) {
     data,
   })
 }
-export function getUserInfo(data: any) {
+export function getUserInfo() {
   return request({
-    url: '/auth/sign',
+    url: '/user/info',
     method: 'post',
   })
 }
