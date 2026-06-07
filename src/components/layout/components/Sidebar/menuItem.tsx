@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
+import { defineComponent, PropType, h, resolveComponent } from 'vue'
 // unplugin-icons 仅在构建时导入Icon  无法动态识别
 
 export default defineComponent({
@@ -12,13 +13,14 @@ export default defineComponent({
   setup(props) {
     const renderMenuItem = (res: RouteRecordRaw): JSX.Element => {
       if (res.children && res.children.length > 0) {
+        const Icon = res.meta?.icon ? resolveComponent(res.meta.icon as string) : null
         return (
           <ElSubMenu index={res.path}>
             {{
               title: () => (
                 <>
                   <ElIcon>
-                    <ep-menu />
+                    {Icon && typeof Icon !== 'string' ? h(Icon) : <ep-menu />}
                   </ElIcon>
                   <span>{res.meta?.title}</span>
                 </>
@@ -28,9 +30,12 @@ export default defineComponent({
           </ElSubMenu>
         )
       }
+      const Icon = res.meta?.icon ? resolveComponent(res.meta.icon as string) : null
       return (
         <ElMenuItem index={res.path}>
-          <ElIcon></ElIcon>
+          <ElIcon>
+            {Icon && typeof Icon !== 'string' ? h(Icon) : null}
+          </ElIcon>
           {res.meta?.title}
         </ElMenuItem>
       )

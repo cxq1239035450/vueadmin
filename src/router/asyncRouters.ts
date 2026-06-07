@@ -39,5 +39,24 @@ const routers: Array<RouteRecordRaw> = [
       },
     ],
   },
+  {
+    path: '/ai',
+    name: 'ai',
+    meta: {
+      title: 'AI 助手',
+      icon: 'ep-magic-stick',
+    },
+    children: [
+      {
+        path: '/aiChat',
+        name: 'aiChat',
+        component: () => import('@/views/AI/index.vue'),
+        meta: {
+          title: 'AI 问答',
+          icon: 'ep-magic-stick',
+        },
+      },
+    ],
+  },
 ]
 export default routers

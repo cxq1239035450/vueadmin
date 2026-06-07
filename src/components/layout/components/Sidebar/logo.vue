@@ -1,51 +1,66 @@
 <template>
-  <div class="logoBox" :style="collapse?'width:64px':''">
-    <transition name="collapse">
-      <div v-if="collapse">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <span v-else class="sidebar-title">{{ title }}</span>
-      </div>
-      <div v-else>
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <span class="sidebar-title">{{ title }}</span>
-      </div>
-    </transition>
+  <div class="logoBox">
+    <router-link class="sidebar-logo-link" to="/">
+      <img v-if="logo" :src="logo" class="sidebar-logo" />
+      <h1 class="sidebar-title" :class="{ 'is-collapse': collapse }">{{ title }}</h1>
+    </router-link>
   </div>
 </template>
 <script setup lang="ts">
 import logo from '@/assets/vue.svg'
-const props = defineProps<{
+defineProps<{
   collapse?: boolean
 }>()
 const title = 'xxxx管理系统'
-const { collapse } = toRefs(props)
 </script>
 
 <style scoped lang="scss">
 .logoBox {
   position: relative;
   width: 100%;
-  height: 36px;
+  height: 50px;
+  line-height: 50px;
+  background: #2b2f3a;
   text-align: center;
   overflow: hidden;
-  & .sidebar-logo {
+
+  & .sidebar-logo-link {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 16px; /* 侧边对齐，更符合常规后台布局 */
+
+    & .sidebar-logo {
       width: 32px;
       height: 32px;
-      vertical-align: middle;
-      margin-right: 12px;
+      flex-shrink: 0;
     }
-}
-.collapse-active {
-  transition: opacity 1.5s;
-}
 
-.collapse-enter,
-.collapse-leave-to {
-  opacity: 0;
-  width: 100%;
-}
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 260px;
-  height: 100%;
+    & .sidebar-title {
+      display: inline-block;
+      margin: 0;
+      color: #fff;
+      font-weight: 600;
+      line-height: 50px;
+      font-size: 14px;
+      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      vertical-align: middle;
+      margin-left: 12px;
+      white-space: nowrap;
+      
+      /* 优化：使用 max-width 配合 opacity 实现平滑过渡 */
+      transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s, margin-left 0.3s;
+      opacity: 1;
+      max-width: 160px; /* 给一个足够大的固定最大宽度 */
+      overflow: hidden;
+      
+      &.is-collapse {
+        max-width: 0;
+        opacity: 0;
+        margin-left: 0;
+      }
+    }
+  }
 }
 </style>
