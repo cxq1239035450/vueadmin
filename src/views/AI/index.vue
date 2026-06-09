@@ -134,9 +134,37 @@ const sendMessage = async () => {
 
     if (reader) {
       let partialLine = ''
+      const textQueue: string[] = []
+      let isTyping = false
+
+      // 使用当前的响应式消息引用
+      const currentAiMessage = messages.value[messages.value.length - 1]
+
+      const processQueue = () => {
+        if (textQueue.length > 0) {
+          isTyping = true
+          const char = textQueue.shift()
+          if (char !== undefined) {
+            currentAiMessage.content += char
+          }
+          scrollToBottom()
+          setTimeout(processQueue, 30) // 30ms 更有打字感
+        } else {
+          isTyping = false
+          // 如果流已结束且队列也清空，则停止聊天状态
+          if (readerDone) {
+            isChatting.value = false
+          }
+        }
+      }
+
+      let readerDone = false
       while (true) {
         const { value, done } = await reader.read()
-        if (done) break
+        if (done) {
+          readerDone = true
+          break
+        }
         
         const chunk = decoder.decode(value, { stream: true })
         const lines = (partialLine + chunk).split('\n')
@@ -144,35 +172,77 @@ const sendMessage = async () => {
         
         for (const line of lines) {
           const trimmedLine = line.trim()
-          if (!trimmedLine) continue
+          if (!trimmedLine || !trimmedLine.startsWith('data:')) continue
           
-          if (trimmedLine.startsWith('data:')) {
-            const data = trimmedLine.replace('data:', '').trim()
-            if (data) {
-              aiMessage.content += data
-              await scrollToBottom()
+          const data = trimmedLine.substring(5).trim()
+          if (data === '[DONE]') {
+            readerDone = true
+            break
+          }
+          
+          try {
+            // NestJS SSE 包装格式解析
+            const parsed = JSON.parse(data)
+            const content = typeof parsed === 'object' ? (parsed.data || '') : data
+            
+            if (content) {
+              textQueue.push(...content.toString().split(''))
+              if (!isTyping) processQueue()
             }
+          } catch (e) {
+            // 非 JSON 格式直接处理
+            textQueue.push(...data.split(''))
+            if (!isTyping) processQueue()
           }
         }
+        if (readerDone) break
       }
-      // 处理最后一行
-      if (partialLine.startsWith('data:')) {
-         const data = partialLine.replace('data:', '').trim()
-         if (data) aiMessage.content += data
+      
+      // 处理最后剩余部分
+      if (partialLine.trim().startsWith('data:')) {
+        const data = partialLine.trim().substring(5).trim()
+        if (data && data !== '[DONE]') {
+          textQueue.push(...data.split(''))
+          if (!isTyping) processQueue()
+        }
       }
     }
   } catch (error) {
     console.error('Chat Error:', error)
     ElMessage.error('AI 响应出错，请稍后再试')
-    aiMessage.content = '抱歉，我现在无法回答。'
-    aiMessage.loading = false
-  } finally {
+    const lastMsg = messages.value[messages.value.length - 1]
+    if (lastMsg && lastMsg.role === 'ai') {
+      lastMsg.content = '抱歉，我现在无法回答。'
+      lastMsg.loading = false
+    }
     isChatting.value = false
   }
 }
 
+const fetchHistory = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BASE_URL}/langchain/memory`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+      }
+    })
+    if (!response.ok) throw new Error('获取历史记录失败')
+    const res = await response.json()
+    // NestJS 可能会包装响应，根据之前的拦截器逻辑，SSE 不包装但 GET 可能会包装
+    const history = res.data?.chat_history || res.chat_history || []
+    messages.value = history.map((item: any) => ({
+      role: item.role === 'human' ? 'human' : 'ai',
+      content: item.content
+    }))
+    await scrollToBottom()
+  } catch (error) {
+    console.error('Fetch History Error:', error)
+  }
+}
+
 onMounted(() => {
-  scrollToBottom()
+  fetchHistory()
 })
 </script>
 
