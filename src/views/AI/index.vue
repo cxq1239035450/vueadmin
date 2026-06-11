@@ -55,7 +55,6 @@
 <script setup lang="ts">
 import { ref, nextTick, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { MagicStick, User } from '@element-plus/icons-vue'
 
 interface ChatMessage {
   role: 'human' | 'ai'
