@@ -76,13 +76,14 @@
 <script setup lang="ts">
 import { getTasksList, stopTask, startTask } from '@/api/task'
 import { getTime } from '@/utils/time'
+import type { TaskItem } from '@/type/api'
 import Add from './add.vue'
 const data = reactive({
   queryParams: {
     jobName: '',
     pageSize: 10,
   },
-  tableData: [],
+  tableData: [] as TaskItem[],
   total: 0,
 })
 const statusFormat = (ow: any, column: any, cellValue: 0 | 1) => {

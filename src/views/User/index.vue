@@ -31,11 +31,12 @@
 </template>
 <script setup lang="ts">
 import { getUserList } from '@/api/user'
+import type { UserInfo } from '@/type/api'
 const data = reactive({
   queryParams: {
     jobName: '',
   },
-  tableData: [],
+  tableData: [] as UserInfo[],
 })
 const getList = () => {
   getUserList({}).then(res => {
