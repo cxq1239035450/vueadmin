@@ -1,8 +1,10 @@
 <template>
   <div class="logoBox">
     <router-link class="sidebar-logo-link" to="/">
-      <img v-if="logo" :src="logo" class="sidebar-logo" />
-      <h1 class="sidebar-title" :class="{ 'is-collapse': collapse }">{{ title }}</h1>
+      <img :src="logo" class="sidebar-logo" alt="系统标志" />
+      <h1 class="sidebar-title" :class="{ 'is-collapse': collapse }">
+        {{ title }}
+      </h1>
     </router-link>
   </div>
 </template>
@@ -48,13 +50,14 @@ const title = 'xxxx管理系统'
       vertical-align: middle;
       margin-left: 12px;
       white-space: nowrap;
-      
+
       /* 优化：使用 max-width 配合 opacity 实现平滑过渡 */
-      transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s, margin-left 0.3s;
+      transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s,
+        margin-left 0.3s;
       opacity: 1;
       max-width: 160px; /* 给一个足够大的固定最大宽度 */
       overflow: hidden;
-      
+
       &.is-collapse {
         max-width: 0;
         opacity: 0;

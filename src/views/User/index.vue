@@ -1,52 +1,52 @@
 <template>
   <div>
     <el-form
-      :model="queryParams"
-      ref="queryForm"
       size="small"
       :inline="true"
       label-width="68px"
+      @submit.prevent="getList"
     >
-      <el-form-item label="任务名称" prop="jobName">
-        <el-input
-          v-model="queryParams.jobName"
-          placeholder="请输入任务名称"
-          clearable
-        />
+      <el-form-item label="用户名">
+        <el-input v-model="username" placeholder="请输入用户名" clearable />
       </el-form-item>
-
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="getList()"
+        <el-button type="primary" :icon="Search" native-type="submit"
           >搜索</el-button
         >
-        <el-button icon="el-icon-refresh">重置</el-button>
+        <el-button :icon="Refresh" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="filteredUsers" class="w-100%">
       <el-table-column prop="date" label="Date" width="180" />
       <el-table-column prop="username" label="Name" width="180" />
       <el-table-column prop="address" label="Address" />
     </el-table>
   </div>
 </template>
-<script setup lang="ts">
-import { getUserList } from '@/api/user'
-import type { UserInfo } from '@/type/api'
-const data = reactive({
-  queryParams: {
-    jobName: '',
-  },
-  tableData: [] as UserInfo[],
-})
-const getList = () => {
-  getUserList({}).then(res => {
-    data.tableData = res.data
-  })
-}
-const { queryParams, tableData } = toRefs(data)
-onMounted(() => {
-  getList()
-})
-</script>
 
-<style scoped lang="scss"></style>
+<script setup lang="ts">
+import { Refresh, Search } from '@element-plus/icons-vue'
+import { getUserList } from '@/api/user'
+import type { User } from '@/types/api'
+
+const username = ref('')
+const users = ref<User[]>([])
+const filteredUsers = computed(() =>
+  users.value.filter(user => user.username.includes(username.value.trim()))
+)
+
+const getList = async () => {
+  try {
+    users.value = (await getUserList()).data
+  } catch {
+    // 请求层统一显示接口错误。
+  }
+}
+
+const reset = () => {
+  username.value = ''
+  return getList()
+}
+
+onMounted(getList)
+</script>

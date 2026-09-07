@@ -1,6 +1,10 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import {
+  createRouter,
+  createWebHashHistory,
+  type RouteRecordRaw,
+} from 'vue-router'
 import Layout from '@/components/layout/index.vue'
-import ErrorPage from '@/components/errorPage/index.tsx'
+import ErrorPage from '@/components/errorPage/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,8 +13,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Login/index.vue'),
   },
   {
-    path: '',
+    path: '/',
     name: 'layout',
+    redirect: '/home',
     component: Layout,
     children: [
       {
@@ -25,7 +30,6 @@ const routes: Array<RouteRecordRaw> = [
   },
 ]
 const router = createRouter({
-  // history: createWebHistory(),
   history: createWebHashHistory(),
   routes,
 })

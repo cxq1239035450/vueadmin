@@ -1,15 +1,15 @@
 import request from '@/utils/request'
-import type { TaskItem, PageResult, PageParams, ApiResponse } from '@/type/api'
+import type { ApiResponse, Task, TaskForm, TaskQuery } from '@/types/api'
 
-export function getTasksList(params: PageParams): Promise<ApiResponse<PageResult<TaskItem>>> {
-  return request({
+export function getTasksList(params: TaskQuery) {
+  return request<ApiResponse<{ list: Task[]; total: number }>>({
     url: '/tasks/list',
     method: 'get',
     params,
   })
 }
 
-export function addTask(data: Partial<TaskItem>): Promise<any> {
+export function addTask(data: TaskForm) {
   return request({
     url: '/tasks/add',
     method: 'post',
@@ -18,7 +18,7 @@ export function addTask(data: Partial<TaskItem>): Promise<any> {
   })
 }
 
-export function stopTask(data: { id: number }): Promise<any> {
+export function stopTask(data: Pick<Task, 'id'>) {
   return request({
     url: '/tasks/stop',
     method: 'post',
@@ -27,7 +27,7 @@ export function stopTask(data: { id: number }): Promise<any> {
   })
 }
 
-export function startTask(data: { id: number }): Promise<any> {
+export function startTask(data: Pick<Task, 'id'>) {
   return request({
     url: '/tasks/start',
     method: 'post',

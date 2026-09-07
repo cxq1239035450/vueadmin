@@ -1,12 +1,13 @@
 <template>
   <div class="headerPage">
-    <el-icon @click="store.toggleCollapse()" size="20" class="foldIcon">
-      <ep-fold v-show="!isCollapse" class="color-black" />
-      <ep-expand v-show="isCollapse" class="color-black" />
+    <el-icon size="20" class="foldIcon" @click="store.toggleCollapse()">
+      <Fold v-if="!isCollapse" />
+      <Expand v-else />
     </el-icon>
   </div>
 </template>
 <script setup lang="ts">
+import { Expand, Fold } from '@element-plus/icons-vue'
 import { useLayoutStore } from '@/store/layout'
 
 const store = useLayoutStore()
@@ -17,7 +18,7 @@ const isCollapse = computed(() => store.isCollapse)
 .headerPage {
   width: 100%;
   background: white;
-  color: white;
+  color: #000;
   border-bottom: 1px solid #dcdfe6;
   .foldIcon {
     padding: 8px;

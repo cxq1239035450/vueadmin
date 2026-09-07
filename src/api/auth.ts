@@ -1,8 +1,8 @@
 import request from '@/utils/request'
-import type { LoginParams, LoginResult, UserInfo } from '@/type/api'
+import type { ApiResponse, LoginParams } from '@/types/api'
 
-export function login(data: LoginParams): Promise<LoginResult> {
-  return request({
+export function login(data: LoginParams) {
+  return request<ApiResponse<{ access_token: string }>>({
     url: '/auth/login',
     method: 'post',
     data,
@@ -10,8 +10,8 @@ export function login(data: LoginParams): Promise<LoginResult> {
   })
 }
 
-export function getUserInfo(): Promise<UserInfo> {
-  return request({
+export function getUserInfo() {
+  return request<Record<string, unknown>>({
     url: '/user/info',
     method: 'get',
   })

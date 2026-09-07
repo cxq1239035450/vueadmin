@@ -1,37 +1,21 @@
 import { defineStore } from 'pinia'
+import type { RouteRecordRaw } from 'vue-router'
 import router from '@/router'
-import routers from '@/router/asyncRouters'
-import { RouteRecordRaw } from 'vue-router'
+import routes from '@/router/asyncRouters'
+
 export const useRoutersStore = defineStore('routers', {
   state: () => ({
-    menuList: [] as Array<RouteRecordRaw>,
+    menuList: [] as RouteRecordRaw[],
   }),
   actions: {
-    // 设置菜单
-    setMenuList(data: any) {
-      this.menuList = data
-    },
-    // 获取菜单
-    getMenuList() {
-      return this.menuList
-    },
-    // 设置路由
-    async setRouters(data: Array<RouteRecordRaw>, parent?: RouteRecordRaw) {
-      await data.forEach(res => {
-        console.log(res, parent, parent?.name, '================')
-
-        router.addRoute(parent?.name || 'layout', res)
-        if (res.children) {
-          this.setRouters(res.children as unknown as Array<RouteRecordRaw>, res)
+    getRouters() {
+      this.menuList = routes
+      // addRoute 会同时注册子路由，无需再次递归。
+      routes.forEach(route => {
+        if (!route.name || !router.hasRoute(route.name)) {
+          router.addRoute('layout', route)
         }
       })
-      // console.log(router.getRoutes())
     },
-    // 获取路由
-    async getRouters() {
-      this.menuList = routers
-      await this.setRouters(routers)
-    },
-    // 删除路由
   },
 })

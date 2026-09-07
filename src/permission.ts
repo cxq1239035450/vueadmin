@@ -4,27 +4,22 @@ import { useUserStore } from '@/store/user'
 import { cancelAll } from '@/utils/cancel-manager'
 import { clearTokenCache } from '@/utils/request'
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async to => {
   nprogress.start()
-  if (to.path === '/login') {
-    cancelAll()
-    clearTokenCache()
-    next()
-  } else {
-    const token = sessionStorage.getItem('token')
+  if (to.path === '/login') return true
+  if (!sessionStorage.getItem('token')) return '/login'
 
-    if (token) {
-      const userStore = useUserStore()
-      if (!userStore.info) {
-        await userStore.getUserInfo()
-        return next({ ...to })
-      }
-      next()
-    } else {
-      next('/login')
+  const userStore = useUserStore()
+  if (!userStore.info) {
+    try {
+      await userStore.getUserInfo()
+      return { path: to.path, query: to.query, hash: to.hash, replace: true }
+    } catch {
+      return '/login'
     }
   }
+  return true
 })
-router.afterEach(() => {
-  nprogress.done()
-})
+
+router.afterEach(() => nprogress.done())
+router.onError(() => nprogress.done())
