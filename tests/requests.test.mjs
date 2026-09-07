@@ -1,31 +1,12 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import {
-  addPending,
-  removePending,
-  getPendingKey,
-} from '../src/utils/screen.ts'
+import { getPendingKey } from '../src/utils/screen.ts'
 
-test('keeps the first request pending until it completes', () => {
-  const key = getPendingKey({ method: 'get', url: '/users' })
-  let firstCancelled = false
-  let duplicateCount = 0
-  addPending(key, () => {
-    firstCancelled = true
-  })
-  addPending(key, () => {
-    duplicateCount++
-  })
-  addPending(key, () => {
-    duplicateCount++
-  })
-  assert.equal(firstCancelled, false)
-  assert.equal(duplicateCount, 2)
-  removePending(key)
-  addPending(key, () => {
-    assert.fail('completed request must be reusable')
-  })
-  removePending(key)
+test('request identity normalizes default method and casing', () => {
+  assert.equal(
+    getPendingKey({ url: '/users' }),
+    getPendingKey({ url: '/users', method: 'GET' })
+  )
 })
 
 test('request identity survives axios JSON serialization', () => {

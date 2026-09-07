@@ -1,62 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { demoEnabled, legacyEnabled } from '@/config/app'
+import system from './modules/system'
+import legacy from './legacy'
 
-const routers: Array<RouteRecordRaw> = [
-  {
-    path: '/task',
-    name: 'task',
-    meta: {
-      title: '定时任务',
-      icon: 'ep-menu',
-    },
-    children: [
-      {
-        path: '/taskList',
-        name: 'taskList',
-        component: () => import('@/views/ScheduledTask/index.vue'),
-        meta: {
-          title: '任务列表',
-          icon: 'Menu',
-        },
-      },
-    ],
-  },
-  {
-    path: '/user',
-    name: 'user',
-    meta: {
-      title: '用户管理',
-      icon: 'ep-menu',
-    },
-    children: [
-      {
-        path: '/userList',
-        name: 'userList',
-        component: () => import('@/views/User/index.vue'),
-        meta: {
-          title: '用户列表',
-          icon: 'Menu',
-        },
-      },
-    ],
-  },
-  {
-    path: '/ai',
-    name: 'ai',
-    meta: {
-      title: 'AI 助手',
-      icon: 'ep-magic-stick',
-    },
-    children: [
-      {
-        path: '/aiChat',
-        name: 'aiChat',
-        component: () => import('@/views/AI/index.vue'),
-        meta: {
-          title: 'AI 问答',
-          icon: 'ep-magic-stick',
-        },
-      },
-    ],
-  },
+// 新业务模块在这里显式注册，禁用模块不进入菜单和路由。
+const routes: RouteRecordRaw[] = [
+  ...system,
+  ...(legacyEnabled && !demoEnabled ? legacy : []),
 ]
-export default routers
+export default routes

@@ -79,7 +79,6 @@ import 'element-plus/es/components/message/style/css'
 import type { Task } from '@/types/api'
 import { getTasksList, stopTask, startTask } from '@/api/task'
 import { getTime } from '@/utils/time'
-import type { TaskItem } from '@/type/api'
 import Add from './add.vue'
 const data = reactive({
   queryParams: {

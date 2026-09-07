@@ -1,46 +1,104 @@
 # Vue Admin
 
-基于 Vue 3、TypeScript、Vite、Pinia 和 Element Plus 的后台模板，包含登录、用户列表、定时任务和 AI 对话页面。
+可复制到不同业务项目的 Vue 3 后台基础模板。使用 TypeScript、Vite、Pinia、Vue Router、Element Plus 和 UnoCSS。默认开发模式无需后端即可运行，生产构建默认连接真实 API。
 
-## 开发
+## 快速启动
 
-使用 Node.js 22.18+（测试直接运行 TypeScript 源文件）和 pnpm。
+Node.js 22.18+，pnpm 10.27。
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-开发接口地址配置在 `.env.development` 的 `VITE_BASE_URL` 中，默认为 `http://localhost:443`。生产环境默认使用同源接口，可在 `.env.production` 中修改。
+开发演示账号：`admin / 123456`（全部权限）、`viewer / 123456`（用户只读）、`guest / 123456`（仅工作台，可体验 403）。
+演示列表保存在浏览器 localStorage，演示登录账号独立固定；修改列表不会修改演示登录凭据。
 
-## 常用命令
+## 用于新项目
 
-| 命令             | 用途                             |
-| ---------------- | -------------------------------- |
-| `pnpm dev`       | 启动开发服务                     |
-| `pnpm prod`      | 使用生产环境变量启动开发服务     |
-| `pnpm typecheck` | 检查 TypeScript 和 Vue 模板类型  |
-| `pnpm lint`      | 检查代码，要求无警告             |
-| `pnpm test`      | 验证请求去重和 AI 流解析         |
-| `pnpm build`     | 先检查类型，再构建到 dist        |
-| `pnpm preview`   | 预览构建产物                     |
-| `pnpm analyze`   | 构建并生成 visualizer/stats.html |
-| `pnpm format`    | 统一源代码格式                   |
+在模板目录执行：
 
-## 目录约定
+```sh
+pnpm create-project ../my-admin
+cd ../my-admin
+pnpm install --frozen-lockfile
+pnpm dev
+```
 
-- `src/api`：接口请求和响应类型的使用；AI 流式请求独立使用 fetch。
-- `src/types`：接口数据类型。
-- `src/utils`：请求去重、日期格式化和消息流解析。
-- `src/router`、`src/permission.ts`：静态路由和登录后注册的菜单路由。
-- `src/store`：用户、路由和布局状态。
-- `src/views`、`src/components`：页面和共享组件。
-- `tests`：关键逻辑回归测试。
+生成器拒绝覆盖已有目录，不复制 Git 历史、node_modules、构建产物或 `*.local` 配置。
+在新项目中修改 `package.json` 的名称，再复制 `.env.example` 为 `.env.development.local`：
 
-Vue、Vue Router 的常用 API、axios 和 Element Plus 服务支持通过 `unplugin-auto-import` 自动导入；图标保持显式导入。Element Plus 模板组件及其样式通过插件按需导入。
+```dotenv
+VITE_APP_TITLE=我的管理后台
+VITE_STORAGE_PREFIX=my-admin
+VITE_DEMO=false
+VITE_ENABLE_LEGACY_MODULES=false
+VITE_BASE_URL=/api
+VITE_PUBLIC_PATH=/
+API_PROXY_TARGET=http://localhost:3000
+```
 
-UnoCSS 配置位于 `uno.config.ts`，保留原有的 `ft-*`、`flex-*`、`min-w-*`、`max-w-*`、`height-*`、`width-*` 自定义规则，以及属性模式、指令和分组写法。使用兼容 Vite 6 的 UnoCSS 0.65 系列。
+不同项目应设置不同的 storage prefix。登录令牌保存在当前标签页的 sessionStorage，主题和演示数据使用带项目前缀的 localStorage。
 
-`src/auto-import.d.ts`、`src/components.d.ts` 和 `.eslintrc-auto-import.json` 由开发服务或构建自动生成。保留这些文件，以便新检出项目在首次构建前就能运行类型检查和 ESLint。
+## 已包含
 
-当前仓库只有前端，接口联调需要启动配套后端。定时任务的新增/修改弹窗目前仍是表单占位，提交与更新流程需要补齐；分页和任务筛选也需要确认后端参数后接入。
+- 登录校验、站内回跳、刷新恢复、退出清理、HTTP 401 登录过期处理。
+- 模块化路由、按角色和权限生成菜单、路由守卫及按钮权限、403 / 404。
+- 响应式布局、面包屑、页面标题、主题与侧栏偏好保存、Element Plus 中文。
+- 请求超时、Bearer 令牌、AbortController 取消、重复请求拦截与可选静默错误。
+- 通用列表 composable：分页、筛选、重置、加载/错误/空状态、竞态保护及删空末页回退。
+- 完整用户 CRUD 示例：表单校验、提交锁定、删除确认、管理员和只读账号。
+- 类型检查、ESLint、回归测试、浏览器测试、CI、新项目生成脚本。
+
+## 项目结构
+
+```text
+src/
+  config/app.ts              品牌、环境、业务开关
+  api/                      后端适配：URL / 参数 / 响应转换
+  mock/                     仅演示模式调用的本地数据实现
+  router/modules/           业务模块路由
+  router/asyncRouters.ts     启用模块的注册入口
+  router/legacy.ts           原有定时任务、用户、AI 可选路由
+  permission.ts             登录和权限守卫
+  store/                    用户、路由、布局状态
+  composables/              useTable / usePermission
+  components/               布局、PageContainer、错误页
+  types/                    统一领域类型和路由 meta 类型
+  utils/                    请求、令牌、权限、竞态等工具
+  views/System/Users.vue    可复制的 CRUD 页面
+scripts/create-project.mjs  新项目生成器
+tests/                     核心行为回归
+e2e/                       浏览器流程测试
+docs/                      后端、扩展和部署说明
+```
+
+## 命令
+
+| 命令                          | 用途                            |
+| ----------------------------- | ------------------------------- |
+| `pnpm dev`                    | 默认本地演示开发                |
+| `pnpm typecheck`              | TypeScript 和 Vue 模板检查      |
+| `pnpm lint`                   | ESLint，零警告                  |
+| `pnpm test`                   | 核心逻辑回归测试                |
+| `pnpm test:e2e`               | 浏览器测试，首次需安装 Chromium |
+| `pnpm check`                  | 类型、lint、单元测试、生产构建  |
+| `pnpm build`                  | 真实 API 模式构建到 dist        |
+| `pnpm build:demo`             | 可独立预览的演示构建            |
+| `pnpm preview`                | 预览最近一次构建                |
+| `pnpm analyze`                | 生成 visualizer/stats.html      |
+| `pnpm format`                 | 格式化源码                      |
+| `pnpm create-project ../name` | 复制成新项目                    |
+
+首次运行浏览器测试：`pnpm exec playwright install chromium`。
+Windows 已安装 Edge 时可使用 PowerShell：`$env:PLAYWRIGHT_CHANNEL='msedge'; pnpm test:e2e`。
+
+## 接入和扩展
+
+详见 [架构与接入](docs/architecture.md) 和 [部署](docs/deployment.md)。
+
+原定时任务和 AI 页面通过 `VITE_ENABLE_LEGACY_MODULES=true` 在真实 API 模式下启用。它们仍依赖原后端；定时任务编辑弹窗、执行语义和分页契约尚未完成联调，不能视作通用模板的已完成业务能力。新项目默认关闭这些模块。
+
+自动导入类型和组件类型文件由 Vite 生成并保留在版本库，以支持首次构建前的类型检查。框架工具与新页面优先显式导入，Element Plus 组件按需加载。
+
+前端权限控制用于导航与交互，真实后端必须独立校验每个接口的角色和权限。模板不假定所有后端都实现刷新令牌；需要时在认证适配层增加。

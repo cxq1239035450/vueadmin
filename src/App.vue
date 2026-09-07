@@ -1,19 +1,6 @@
 <template>
-  <div class="app">
-    <router-view v-slot="{ Component }">
-      <transition name="fade">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
-      </transition>
-    </router-view>
-  </div>
+  <el-config-provider :locale="zhCn"><router-view /></el-config-provider>
 </template>
-
-<style lang="scss">
-.app {
-  height: 100%;
-  width: 100%;
-  background: var(--primary-background-color);
-}
-</style>
+<script setup lang="ts">
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+</script>

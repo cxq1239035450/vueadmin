@@ -1,3 +1,7 @@
+import { appConfig } from '@/config/app'
+import { tokenStorage } from '@/utils/storage'
+import { expireSession } from '@/utils/session'
+
 export interface ChatMessage {
   role: 'human' | 'ai'
   content: string
@@ -6,15 +10,16 @@ export interface ChatMessage {
 
 async function aiRequest(path: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers)
-  const token = sessionStorage.getItem('token')
+  const token = tokenStorage.get()
   if (token) headers.set('Authorization', `Bearer ${token}`)
   const response = await fetch(
-    `${import.meta.env.VITE_BASE_URL}/langchain/${path}`,
+    `${appConfig.baseURL.replace(/\/$/, '')}/langchain/${path}`,
     {
       ...init,
       headers,
     }
   )
+  if (response.status === 401 && token === tokenStorage.get()) expireSession()
   if (!response.ok) throw new Error(`请求失败：${response.status}`)
   return response
 }
