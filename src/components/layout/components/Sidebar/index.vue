@@ -2,16 +2,25 @@
   <div class="sidebar-container" :class="{ 'is-collapse': isCollapse }">
     <Logo :collapse="isCollapse"></Logo>
     <el-scrollbar>
-      <el-menu class="menuClass" mode="vertical" :default-active="menuActive" :collapse="isCollapse" :unique-opened="true"
-        :router="true" @open="handleOpen" @close="handleClose" :collapse-transition="true">
-        <MenuItem :menuList="menuList" />
+      <el-menu
+        class="menuClass"
+        mode="vertical"
+        :default-active="menuActive"
+        :collapse="isCollapse"
+        :unique-opened="true"
+        :router="true"
+        :collapse-transition="true"
+      >
+        <MenuItem :menu-list="menuList" />
       </el-menu>
     </el-scrollbar>
   </div>
 </template>
 <script setup lang="ts">
 import Logo from './logo.vue'
-import MenuItem from './menuItem.tsx'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import MenuItem from './menuItem.vue'
 import { useLayoutStore } from '@/store/layout'
 import { useRoutersStore } from '@/store/routers'
 const store = useLayoutStore()
@@ -21,9 +30,6 @@ const isCollapse = computed(() => store.isCollapse)
 
 const route = useRoute()
 const menuActive = computed(() => route.path)
-
-const handleOpen = () => { }
-const handleClose = () => { }
 </script>
 
 <style lang="scss" scoped>
@@ -50,7 +56,7 @@ const handleClose = () => { }
     border: none;
     height: 100%;
     width: 100% !important;
-    
+
     // 确保展开收起动画平滑
     &:not(.el-menu--collapse) {
       width: 200px !important;
@@ -61,7 +67,8 @@ const handleClose = () => { }
 <style lang="scss">
 /* 全局样式处理 Element Plus 菜单动画 */
 .horizontal-collapse-transition {
-  transition: 0.3s width ease-in-out, 0.3s padding-left ease-in-out, 0.3s padding-right ease-in-out !important;
+  transition: 0.3s width ease-in-out, 0.3s padding-left ease-in-out,
+    0.3s padding-right ease-in-out !important;
 }
 
 .el-menu--collapse {

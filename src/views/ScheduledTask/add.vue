@@ -11,7 +11,7 @@
         <el-input v-model="form.url"></el-input>
       </el-form-item>
       <el-form-item label="请求头">
-        <el-input type="headers" v-model="form.name"></el-input>
+        <el-input v-model="form.headers"></el-input>
       </el-form-item>
       <el-form-item label="请求内容">
         <el-input v-model="form.data"></el-input>
@@ -23,25 +23,27 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
-const data = reactive({
-  visible: false,
-})
+import { reactive, ref } from 'vue'
+import type { Task } from '@/types/api'
+const visible = ref(false)
 const form = reactive({
   name: '',
   description: '',
   url: '',
-  headers: {},
+  headers: '',
   data: '',
   executionTime: '',
 })
-const show = (item?: any) => {
-  data.visible = true
-  console.log(item)
+const show = (item?: Task) => {
+  visible.value = true
+  form.name = item?.name ?? ''
+  form.description = item?.description ?? ''
+  form.executionTime = item?.executionTime ?? ''
+  form.url = ''
+  form.headers = ''
+  form.data = ''
 }
 defineExpose({
   show,
 })
-const { visible } = toRefs(data)
 </script>
-
-<style scoped lang="scss"></style>

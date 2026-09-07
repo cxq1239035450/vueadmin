@@ -1,36 +1,26 @@
 import { defineStore } from 'pinia'
 import { getUserInfo, login } from '@/api/auth'
-import { anyObject } from '@/type/userType'
-import router from '@/router'
+import type { LoginParams } from '@/types/api'
 import { useRoutersStore } from './routers'
+
 export const useUserStore = defineStore('user', {
   state: () => ({
-    info: null as Object | null,
+    info: null as Record<string, unknown> | null,
   }),
   actions: {
     async getUserInfo() {
-      // 异步操作
       try {
-        const resData = await getUserInfo()
-        // this.$patch(state => {
-        //   state.info = resData
-        // })
-
-        this.info = resData
-        const routerStore = useRoutersStore()
-        routerStore.getRouters()
-      } catch {
+        this.info = await getUserInfo()
+        useRoutersStore().getRouters()
+      } catch (error) {
         sessionStorage.removeItem('token')
-        return Promise.reject(new Error('获取用户信息失败'))
+        throw error
       }
     },
-    async userLogin(data: anyObject) {
+    async userLogin(data: LoginParams) {
       const res = await login(data)
       sessionStorage.setItem('token', res.data.access_token)
-      return true
-    },
-    setUserInfoStore() {
-      router.push('/')
+      this.info = null
     },
   },
 })

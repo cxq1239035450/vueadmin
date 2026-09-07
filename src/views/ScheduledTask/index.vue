@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true">
+    <el-form :model="queryParams" size="small" :inline="true">
       <el-form-item label="任务名称" prop="jobName">
         <el-input
           v-model="queryParams.jobName"
@@ -24,7 +24,7 @@
         <el-button @click="addBtn()">新增</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" class="w-100% flex-1">
+    <el-table :data="tableData" class="task-table">
       <el-table-column prop="name" label="任务名称" width="180" />
       <el-table-column prop="description" label="任务详情" width="180" />
       <el-table-column prop="executionTime" label="执行时间" width="180" />
@@ -54,14 +54,14 @@
         align="center"
       ></el-table-column>
       <el-table-column label="操作" align="center">
-        <template #default="scope">
-          <el-button size="small" @click="changeStatus(scope.row)">{{
-            scope.row.status ? '暂停' : '启动'
+        <template #default="{ row }">
+          <el-button size="small" @click="changeStatus(row as Task)">{{
+            row.status ? '暂停' : '启动'
           }}</el-button>
-          <el-button size="small" @click="executeBtn(scope.row)"
+          <el-button size="small" @click="executeBtn(row as Task)"
             >立即执行</el-button
           >
-          <el-button size="small" @click="editBtn(scope.row)">修改</el-button>
+          <el-button size="small" @click="editBtn(row as Task)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,6 +74,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { reactive, ref, toRefs, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import 'element-plus/es/components/message/style/css'
+import type { Task } from '@/types/api'
 import { getTasksList, stopTask, startTask } from '@/api/task'
 import { getTime } from '@/utils/time'
 import Add from './add.vue'
@@ -82,40 +86,53 @@ const data = reactive({
     jobName: '',
     pageSize: 10,
   },
-  tableData: [],
+  tableData: [] as Task[],
   total: 0,
 })
-const statusFormat = (ow: any, column: any, cellValue: 0 | 1) => {
+const statusFormat = (_row: Task, _column: unknown, cellValue: 0 | 1) => {
   const o = {
     0: '未执行',
     1: '执行中',
   }
   return o[cellValue]
 }
-const changeTime = (ow: any, column: any, cellValue: Date) => {
+const changeTime = (_row: Task, _column: unknown, cellValue: string) => {
   return getTime(cellValue)
 }
 const getList = () => {
-  getTasksList(data.queryParams).then(res => {
-    data.tableData = res.data.list
-    data.total = res.data.total
-  })
+  getTasksList(data.queryParams)
+    .then(res => {
+      data.tableData = res.data.list
+      data.total = res.data.total
+    })
+    .catch(() => {
+      // 请求层统一显示接口错误。
+    })
 }
 const addRef = ref<InstanceType<typeof Add> | null>(null)
 const addBtn = () => {
   addRef.value?.show()
 }
-const editBtn = (item: any) => {
+const editBtn = (item: Task) => {
   addRef.value?.show(item)
 }
-const executeBtn = (item: any) => {
-  startTask({ id: item.id }).then(res => {
-    getList()
-    ElMessage.success('执行成功')
-  })
+const executeBtn = (item: Task) => {
+  startTask({ id: item.id })
+    .then(() => {
+      getList()
+      ElMessage.success('执行成功')
+    })
+    .catch(() => {
+      // 请求层统一显示接口错误。
+    })
 }
-const changeStatus = (item: any) => {
-  const apis = {}
+const changeStatus = (item: Task) => {
+  const updateStatus = item.status ? stopTask : startTask
+  updateStatus({ id: item.id })
+    .then(getList)
+    .catch(() => {
+      // 请求层统一显示接口错误。
+    })
 }
 onMounted(() => {
   getList()
@@ -128,5 +145,9 @@ const { queryParams, tableData, total } = toRefs(data)
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+.task-table {
+  width: 100%;
+  flex: 1;
 }
 </style>
