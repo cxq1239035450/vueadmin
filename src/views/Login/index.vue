@@ -1,7 +1,7 @@
 <template>
   <div class="centerPage">
     <div class="card">
-      <div class="login-title">LoginPage</div>
+      <div class="mb-20px">LoginPage</div>
       <el-form @submit.prevent="loginBtn">
         <el-form-item>
           <el-input v-model="formData.username" placeholder="账号" />
@@ -13,11 +13,11 @@
             placeholder="输入密码"
           />
         </el-form-item>
-        <el-button class="full-width" native-type="submit" :loading="loading"
+        <el-button class="w-100%" native-type="submit" :loading="loading"
           >登陆/注册</el-button
         >
       </el-form>
-      <div class="login-agreement">
+      <div class="ft-12 mt-20px">
         注册或登录即代表您同意《用户协议》和《隐私协议》
       </div>
     </div>
@@ -25,8 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 
 const userStore = useUserStore()
@@ -51,12 +49,5 @@ const loginBtn = async () => {
 <style scoped lang="scss">
 .card {
   width: 380px;
-}
-.login-title {
-  margin-bottom: 20px;
-}
-.login-agreement {
-  font-size: 12px;
-  margin-top: 20px;
 }
 </style>

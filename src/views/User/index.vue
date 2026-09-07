@@ -16,7 +16,7 @@
         <el-button :icon="Refresh" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="filteredUsers" class="full-width">
+    <el-table :data="filteredUsers" class="w-100%">
       <el-table-column prop="date" label="Date" width="180" />
       <el-table-column prop="username" label="Name" width="180" />
       <el-table-column prop="address" label="Address" />
@@ -25,7 +25,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { getUserList } from '@/api/user'
 import type { User } from '@/types/api'

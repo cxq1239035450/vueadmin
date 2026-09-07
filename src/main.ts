@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import './sass/index.scss'
+import 'virtual:uno.css'
 
 import router from './router'
 import './permission'

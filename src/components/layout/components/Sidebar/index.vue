@@ -18,8 +18,6 @@
 </template>
 <script setup lang="ts">
 import Logo from './logo.vue'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
 import MenuItem from './menuItem.vue'
 import { useLayoutStore } from '@/store/layout'
 import { useRoutersStore } from '@/store/routers'

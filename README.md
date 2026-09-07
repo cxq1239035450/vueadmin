@@ -37,6 +37,10 @@ pnpm dev
 - `src/views`、`src/components`：页面和共享组件。
 - `tests`：关键逻辑回归测试。
 
-Vue API 和图标显式导入；Element Plus 模板组件及其样式通过插件按需导入。直接调用 ElMessage 等服务时应导入对应样式。`src/components.d.ts` 由开发服务或构建自动生成，保留此文件以支持首次类型检查。
+Vue、Vue Router 的常用 API、axios 和 Element Plus 服务支持通过 `unplugin-auto-import` 自动导入；图标保持显式导入。Element Plus 模板组件及其样式通过插件按需导入。
+
+UnoCSS 配置位于 `uno.config.ts`，保留原有的 `ft-*`、`flex-*`、`min-w-*`、`max-w-*`、`height-*`、`width-*` 自定义规则，以及属性模式、指令和分组写法。使用兼容 Vite 6 的 UnoCSS 0.65 系列。
+
+`src/auto-import.d.ts`、`src/components.d.ts` 和 `.eslintrc-auto-import.json` 由开发服务或构建自动生成。保留这些文件，以便新检出项目在首次构建前就能运行类型检查和 ESLint。
 
 当前仓库只有前端，接口联调需要启动配套后端。定时任务的新增/修改弹窗目前仍是表单占位，提交与更新流程需要补齐；分页和任务筛选也需要确认后端参数后接入。

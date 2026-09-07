@@ -24,7 +24,7 @@
         <el-button @click="addBtn()">新增</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" class="task-table">
+    <el-table :data="tableData" class="w-100% flex-1">
       <el-table-column prop="name" label="任务名称" width="180" />
       <el-table-column prop="description" label="任务详情" width="180" />
       <el-table-column prop="executionTime" label="执行时间" width="180" />
@@ -74,7 +74,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { reactive, ref, toRefs, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import 'element-plus/es/components/message/style/css'
 import type { Task } from '@/types/api'
@@ -145,9 +144,5 @@ const { queryParams, tableData, total } = toRefs(data)
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-.task-table {
-  width: 100%;
-  flex: 1;
 }
 </style>
